@@ -1,22 +1,21 @@
 import React, { Component } from "react";
-import '../styles/App.css';
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
             name: {
-                first: "",
-                second: "",
+                name1: "",
+                name2: "",
             },
             result: "",
         };
     }
 
     calculate_relationship = () => {
-        const { first, second } = this.state.name;
+        const { name1, name2 } = this.state.name;
 
-        if (!first || !second) {
+        if (!name1 || !name2) {
             this.setState({ result: "Please Enter valid input" });
             return;
         }
@@ -37,7 +36,7 @@ class App extends Component {
             return arr1.concat(arr2).length;
         };
 
-        const remainingLength = removeCommonLetters(first, second);
+        const remainingLength = removeCommonLetters(name1, name2);
         const relationship = remainingLength % 6;
 
         let relationshipStatus = "";
@@ -59,7 +58,7 @@ class App extends Component {
     };
 
     ClearAll = () => {
-        this.setState({ name: { first: "", second: "" }, result: "" });
+        this.setState({ name: { name1: "", name2: "" }, result: "" });
     };
 
     render() {
@@ -68,20 +67,20 @@ class App extends Component {
                 <input
                     type="text"
                     id="name1"
-                    placeholder="Enter first name"
+                    placeholder="Enter First name"
                     data-testid="input1"
-                    name="first"
-                    value={this.state.name.first}
-                    onChange={(e) => this.setState({ name: { ...this.state.name, first: e.target.value } })}
+                    name="name1"
+                    value={this.state.name.name1}
+                    onChange={(e) => this.setState({ name: { ...this.state.name, [e.target.name]: e.target.value } })}
                 />
                 <input
                     type="text"
                     id="name2"
-                    placeholder="Enter second name"
+                    placeholder="Enter Second name"
                     data-testid="input2"
-                    name="second"
-                    value={this.state.name.second}
-                    onChange={(e) => this.setState({ name: { ...this.state.name, second: e.target.value } })}
+                    name="name2"
+                    value={this.state.name.name2}
+                    onChange={(e) => this.setState({ name: { ...this.state.name, [e.target.name]: e.target.value } })}
                 />
                 <button
                     onClick={this.calculate_relationship}
@@ -99,3 +98,4 @@ class App extends Component {
 }
 
 export default App;
+    
