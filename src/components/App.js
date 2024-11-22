@@ -4,18 +4,16 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: {
-                name1: "",
-                name2: "",
-            },
+            name1: "",
+            name2: "",
             result: "",
         };
     }
 
-    calculate_relationship = () => {
-        const { name1, name2 } = this.state.name;
+    calculateRelationship = () => {
+        const { name1, name2 } = this.state;
 
-        if (!name1 || !name2) {
+        if (!name1.trim() || !name2.trim()) {
             this.setState({ result: "Please Enter valid input" });
             return;
         }
@@ -25,40 +23,35 @@ class App extends Component {
             let arr1 = str1.split('');
             let arr2 = str2.split('');
 
-            arr1.forEach((char) => {
+            for (let char of arr1) {
                 const index = arr2.indexOf(char);
                 if (index > -1) {
                     arr2.splice(index, 1);
                     arr1.splice(arr1.indexOf(char), 1);
                 }
-            });
+            }
 
-            return arr1.concat(arr2).length;
+            return arr1.length + arr2.length;
         };
 
         const remainingLength = removeCommonLetters(name1, name2);
         const relationship = remainingLength % 6;
 
-        let relationshipStatus = "";
-        if (relationship === 1) {
-            relationshipStatus = "Friends";
-        } else if (relationship === 2) {
-            relationshipStatus = "Love";
-        } else if (relationship === 3) {
-            relationshipStatus = "Affection";
-        } else if (relationship === 4) {
-            relationshipStatus = "Marriage";
-        } else if (relationship === 5) {
-            relationshipStatus = "Enemy";
-        } else if (relationship === 0) {
-            relationshipStatus = "Siblings";
-        }
+        // Determine relationship status
+        const relationshipMap = {
+            1: "Friends",
+            2: "Love",
+            3: "Affection",
+            4: "Marriage",
+            5: "Enemy",
+            0: "Siblings",
+        };
 
-        this.setState({ result: relationshipStatus });
+        this.setState({ result: relationshipMap[relationship] });
     };
 
-    ClearAll = () => {
-        this.setState({ name: { name1: "", name2: "" }, result: "" });
+    clearAll = () => {
+        this.setState({ name1: "", name2: "", result: "" });
     };
 
     render() {
@@ -66,29 +59,28 @@ class App extends Component {
             <div id="main">
                 <input
                     type="text"
-                    id="name1"
-                    placeholder="Enter First name"
+                    placeholder="Enter First Name"
                     data-testid="input1"
-                    name="name1"
-                    value={this.state.name.name1}
-                    onChange={(e) => this.setState({ name: { ...this.state.name, [e.target.name]: e.target.value } })}
+                    value={this.state.name1}
+                    onChange={(e) => this.setState({ name1: e.target.value })}
                 />
                 <input
                     type="text"
-                    id="name2"
-                    placeholder="Enter Second name"
+                    placeholder="Enter Second Name"
                     data-testid="input2"
-                    name="name2"
-                    value={this.state.name.name2}
-                    onChange={(e) => this.setState({ name: { ...this.state.name, [e.target.name]: e.target.value } })}
+                    value={this.state.name2}
+                    onChange={(e) => this.setState({ name2: e.target.value })}
                 />
                 <button
-                    onClick={this.calculate_relationship}
+                    onClick={this.calculateRelationship}
                     data-testid="calculate_relationship"
                 >
                     Calculate Relationship Future
                 </button>
-                <button data-testid="clear" onClick={this.ClearAll}>
+                <button
+                    onClick={this.clearAll}
+                    data-testid="clear"
+                >
                     Clear
                 </button>
                 {this.state.result && <h3 data-testid="answer">{this.state.result}</h3>}
@@ -98,4 +90,3 @@ class App extends Component {
 }
 
 export default App;
-    
