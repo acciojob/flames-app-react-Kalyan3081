@@ -18,7 +18,6 @@ class App extends Component {
             return;
         }
 
-        // Function to remove common letters
         const removeCommonLetters = (str1, str2) => {
             let arr1 = str1.split('');
             let arr2 = str2.split('');
@@ -37,7 +36,6 @@ class App extends Component {
         const remainingLength = removeCommonLetters(name1, name2);
         const relationship = remainingLength % 6;
 
-        // Determine relationship status
         const relationshipMap = {
             1: "Friends",
             2: "Love",
@@ -61,6 +59,7 @@ class App extends Component {
                     type="text"
                     placeholder="Enter First Name"
                     data-testid="input1"
+                    name="name1"
                     value={this.state.name1}
                     onChange={(e) => this.setState({ name1: e.target.value })}
                 />
@@ -68,6 +67,7 @@ class App extends Component {
                     type="text"
                     placeholder="Enter Second Name"
                     data-testid="input2"
+                    name="name2"
                     value={this.state.name2}
                     onChange={(e) => this.setState({ name2: e.target.value })}
                 />
