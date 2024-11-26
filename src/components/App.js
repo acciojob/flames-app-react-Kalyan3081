@@ -1,92 +1,112 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            name1: "",
-            name2: "",
-            result: "",
-        };
+  constructor(props) {
+    super(props);
+    this.state = {
+      name1: "",
+      name2: "",
+      result: "",
+    };
+  }
+
+  getResult(result) {
+    console.log(result);
+    switch (result % 6) {
+      case 1: {
+        return "Friends";
+      }
+      case 2: {
+        return "Love";
+      }
+      case 3: {
+        return "Affection";
+      }
+      case 4: {
+        return "Marriage";
+      }
+      case 5: {
+        return "Enemy";
+      }
+      case 0: {
+        return "Siblings";
+      }
+      default: {
+        return "Please Enter a valid input";
+      }
     }
-
-    calculateRelationship = () => {
-        const { name1, name2 } = this.state;
-
-        if (!name1.trim() || !name2.trim()) {
-            this.setState({ result: "Please Enter valid input" });
-            return;
+  }
+  onResult() {
+    const getCounts = (s) => {
+      let ob = {};
+      for (let i of s) {
+        if (ob[i]) {
+          ob[i] += 1;
+        } else {
+          ob[i] = 1;
         }
-
-        const removeCommonLetters = (str1, str2) => {
-            let arr1 = str1.split('');
-            let arr2 = str2.split('');
-
-            for (let char of arr1) {
-                const index = arr2.indexOf(char);
-                if (index > -1) {
-                    arr2.splice(index, 1);
-                    arr1.splice(arr1.indexOf(char), 1);
-                }
-            }
-
-            return arr1.length + arr2.length;
-        };
-
-        const remainingLength = removeCommonLetters(name1, name2);
-        const relationship = remainingLength % 6;
-
-        const relationshipMap = {
-            1: "Friends",
-            2: "Love",
-            3: "Affection",
-            4: "Marriage",
-            5: "Enemy",
-            0: "Siblings",
-        };
-
-        this.setState({ result: relationshipMap[relationship] });
+      }
+      return ob;
     };
 
-    clearAll = () => {
-        this.setState({ name1: "", name2: "", result: "" });
-    };
+    let ao = getCounts(this.state.name1);
+    let bo = getCounts(this.state.name2);
 
-    render() {
-        return (
-            <div id="main">
-                <input
-                    type="text"
-                    placeholder="Enter First Name"
-                    data-testid="input1"
-                    name="name1"
-                    value={this.state.name1}
-                    onChange={(e) => this.setState({ name1: e.target.value })}
-                />
-                <input
-                    type="text"
-                    placeholder="Enter Second Name"
-                    data-testid="input2"
-                    name="name2"
-                    value={this.state.name2}
-                    onChange={(e) => this.setState({ name2: e.target.value })}
-                />
-                <button
-                    onClick={this.calculateRelationship}
-                    data-testid="calculate_relationship"
-                >
-                    Calculate Relationship Future
-                </button>
-                <button
-                    onClick={this.clearAll}
-                    data-testid="clear"
-                >
-                    Clear
-                </button>
-                {this.state.result && <h3 data-testid="answer">{this.state.result}</h3>}
-            </div>
-        );
+    for (let key in ao) {
+      let count = ao[key];
+      if (bo[key]) {
+        let bkc = bo[key];
+        if (bkc >= count) {
+          bo[key] -= count;
+          ao[key] -= count;
+        } else if (bkc < count) {
+          ao[key] -= bkc;
+          bo[key] -= bkc;
+        }
+      }
     }
+
+    let aov = Object.values(ao);
+
+    let bov = Object.values(bo);
+    let f = [...aov, ...bov];
+
+    let result = 0;
+    for (let i of f) {
+      result += i;
+    }
+    console.log({result,ao,s:this.state,bo,f})
+    let out = this.getResult(result);
+    this.setState({ result: out });
+  }
+
+  onClear() {
+    this.setState({ name1: "", name2: "", result: "" });
+  }
+  onInput(e){
+    const {name,value} = e.target
+    this.setState({[name]:value})
+  }
+  render() {
+    return (
+      <div id="main">
+        <input name={"name1"} onChange={this.onInput.bind(this)} data-testid="input1" placeholder="Enter first name" />
+        <input name={"name2"} onChange={this.onInput.bind(this)}  placeholder="Enter second name" data-testid="input2" />
+
+        <button
+          data-testid="calculate_relationship"
+          onClick={this.onResult.bind(this)}
+        >
+          Calculate Relationship Future
+        </button>
+        <button data-testid="clear" onClick={this.onClear.bind(this)}>
+          Clear
+        </button>
+
+        <h3 data-testid="answer">{this.state.result}</h3>
+      </div>
+    );
+  }
 }
 
 export default App;
